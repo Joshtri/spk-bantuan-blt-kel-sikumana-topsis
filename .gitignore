@@ -16,7 +16,7 @@ dist-ssr
 # Environment variables
 .env
 .env.local
-
+.env.production
 # Editor directories and files
 
 .vscode/_
@@ -32,3 +32,4 @@ _.sln
 .claude
 AGENTS.md
 CLAUDE.md
+
