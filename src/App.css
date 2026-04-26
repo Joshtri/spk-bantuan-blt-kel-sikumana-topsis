@@ -1,89 +1,85 @@
-body {
-  margin: 0px;
-  background: white;
+@import "tailwindcss";
+@import "@heroui/styles";
+
+/*
+ * HeroUI Theme Customization
+ */
+
+:root,
+.light,
+.default,
+[data-theme="light"],
+[data-theme="default"] {
+  /* Primary — indigo-violet */
+  --accent: oklch(54.00% 0.2300 274.00);
+  --accent-foreground: oklch(99.11% 0 0);
+
+  --background: oklch(97.50% 0.0080 264.00);
+  --border: oklch(91.00% 0.0150 264.00);
+  --danger: oklch(63.00% 0.2421 27.18);
+  --danger-foreground: oklch(99.11% 0 0);
+  --default: oklch(94.00% 0.0150 264.00);
+  --default-foreground: oklch(20.00% 0.0059 264.00);
+  --field-background: oklch(100% 0 0);
+  --field-foreground: oklch(20.00% 0.0200 264.00);
+  --field-placeholder: oklch(58.00% 0.0300 264.00);
+  --focus: oklch(54.00% 0.2300 274.00);
+  --foreground: oklch(20.00% 0.0200 264.00);
+  --muted: oklch(58.00% 0.0300 264.00);
+  --overlay: oklch(100% 0.005 264.00);
+  --overlay-foreground: oklch(20.00% 0.0200 264.00);
+  --scrollbar: oklch(88.00% 0.0150 264.00);
+  --segment: oklch(100% 0.0150 264.00);
+  --segment-foreground: oklch(20.00% 0.0200 264.00);
+  --separator: oklch(92.00% 0.0150 264.00);
+  --success: oklch(72.00% 0.1900 152.00);
+  --success-foreground: oklch(20.00% 0.0059 152.00);
+  --surface: oklch(100% 0.0080 264.00);
+  --surface-foreground: oklch(20.00% 0.0200 264.00);
+  --surface-secondary: oklch(95.50% 0.0120 264.00);
+  --surface-secondary-foreground: oklch(20.00% 0.0200 264.00);
+  --surface-tertiary: oklch(93.50% 0.0130 264.00);
+  --surface-tertiary-foreground: oklch(20.00% 0.0200 264.00);
+  --warning: oklch(78.00% 0.1600 73.00);
+  --warning-foreground: oklch(20.00% 0.0059 73.00);
+
+  --radius: 0.625rem;
+  --field-radius: 0.75rem;
 }
 
-table {
-  border-spacing: 0;
-  border: 1px solid black;
-}
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
 
-table th,
-td {
-  margin: 0;
-  padding: 0.5rem;
-  border-bottom: 1px solid black;
-  border-right: 1px solid black;
-}
+  --accent: oklch(62.00% 0.2100 274.00);
+  --accent-foreground: oklch(99.11% 0 0);
 
-table tr:last-child td {
-  border-bottom: 0;
-}
-
-table th,
-td {
-  margin: 0;
-  padding: 0.5rem;
-  border-bottom: 1px solid black;
-  border-right: 1px solid black;
-}
-
-table th:last-child,
-td:last-child {
-  border-right: 0;
-}
-
-.layout {
-  display: flex;
-  gap: 16px;
-}
-
-@media screen and (max-width: 751px) {
-  .layout {
-    display: block;
-  }
-}
-
-.layout .content {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.breadcrumb {
-  display: flex;
-  gap: 24px;
-  list-style-type: "/  ";
-  padding: 8px 16px;
-  border-bottom: 1px solid lightgray;
-}
-
-.breadcrumb a {
-  color: blue;
-  text-decoration: none;
-}
-
-.menu {
-  flex-shrink: 0;
-  padding: 8px 16px;
-  border-right: 1px solid lightgray;
-}
-
-.menu a {
-  color: black;
-}
-
-.menu .active {
-  font-weight: bold;
-}
-
-@media screen and (max-width: 751px) {
-  .menu {
-    border-right: none;
-    border-bottom: 1px solid lightgray;
-  }
-}
-
-.menu ul {
-  padding-left: 16px;
+  --background: oklch(11.00% 0.0200 264.00);
+  --border: oklch(27.00% 0.0200 264.00);
+  --danger: oklch(59.00% 0.2046 26.07);
+  --danger-foreground: oklch(99.11% 0 0);
+  --default: oklch(26.00% 0.0200 264.00);
+  --default-foreground: oklch(99.11% 0 0);
+  --field-background: oklch(20.00% 0.0350 264.00);
+  --field-foreground: oklch(99.11% 0.0150 264.00);
+  --field-placeholder: oklch(68.00% 0.0350 264.00);
+  --focus: oklch(62.00% 0.2100 274.00);
+  --foreground: oklch(99.11% 0.0150 264.00);
+  --muted: oklch(68.00% 0.0350 264.00);
+  --overlay: oklch(20.00% 0.0350 264.00);
+  --overlay-foreground: oklch(99.11% 0.0150 264.00);
+  --scrollbar: oklch(68.00% 0.0200 264.00);
+  --segment: oklch(38.00% 0.0200 264.00);
+  --segment-foreground: oklch(99.11% 0.0200 264.00);
+  --separator: oklch(24.00% 0.0200 264.00);
+  --success: oklch(72.00% 0.1900 152.00);
+  --success-foreground: oklch(20.00% 0.0059 152.00);
+  --surface: oklch(20.00% 0.0350 264.00);
+  --surface-foreground: oklch(99.11% 0.0150 264.00);
+  --surface-secondary: oklch(24.50% 0.0280 264.00);
+  --surface-secondary-foreground: oklch(99.11% 0.0150 264.00);
+  --surface-tertiary: oklch(26.00% 0.0280 264.00);
+  --surface-tertiary-foreground: oklch(99.11% 0.0150 264.00);
+  --warning: oklch(82.00% 0.1400 77.00);
+  --warning-foreground: oklch(20.00% 0.0059 73.00);
 }
