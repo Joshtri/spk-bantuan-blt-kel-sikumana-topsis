@@ -4,6 +4,8 @@ import {
   AdjustmentsHorizontalIcon,
   UserPlusIcon,
   CalendarIcon,
+  ScaleIcon,
+  ClipboardDocumentListIcon,
 } from "@heroicons/react/24/outline";
 import type { IResourceItem } from "@refinedev/core";
 
@@ -63,6 +65,28 @@ export const RESOURCES: IResourceItem[] = [
       label: "Calon Penerima",
       canDelete: true,
       icon: <UserPlusIcon className="h-5 w-5" />,
+    },
+  },
+  {
+    name: "criteria-scales",
+    list: "/skala-kriteria",
+    create: "/skala-kriteria/create",
+    edit: "/skala-kriteria/edit/:id",
+    meta: {
+      label: "Skala Kriteria",
+      canDelete: true,
+      icon: <ScaleIcon className="h-5 w-5" />,
+    },
+  },
+  {
+    name: "assessments",
+    list: "/penilaian",
+    create: "/penilaian/create",
+    edit: "/penilaian/edit/:id",
+    meta: {
+      label: "Penilaian",
+      canDelete: true,
+      icon: <ClipboardDocumentListIcon className="h-5 w-5" />,
     },
   },
 ];

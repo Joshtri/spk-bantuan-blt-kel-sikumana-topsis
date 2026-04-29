@@ -16,6 +16,7 @@ import { authProvider } from "./providers/auth-provider";
 import { dataProvider } from "./providers/data-provider";
 import { notificationProvider } from "./providers/notification/notification-provider";
 import { NotificationProvider } from "./providers/notification";
+import { LookupOptionsProvider } from "./contexts/lookupOptions";
 import AppRoutes from "./app/routes/app-routes";
 
 /** Bridges HeroUI's React Aria href-based navigation with react-router. */
@@ -32,6 +33,7 @@ function App() {
   return (
     <BrowserRouter>
       {/* <GitHubBanner /> */}
+      <LookupOptionsProvider>
       <HeroUIRouterProvider>
         <RefineKbarProvider>
           <DevtoolsProvider>
@@ -57,6 +59,7 @@ function App() {
           </DevtoolsProvider>
         </RefineKbarProvider>
       </HeroUIRouterProvider>
+      </LookupOptionsProvider>
     </BrowserRouter>
   );
 }

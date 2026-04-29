@@ -8,4 +8,5 @@ export interface ICandidateRecipient {
   gender: string;
   address: string;
   phoneNumber: string;
+  isHaveAccount: boolean;
 }

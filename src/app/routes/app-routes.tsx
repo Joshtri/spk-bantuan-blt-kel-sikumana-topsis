@@ -18,6 +18,13 @@ import UserEditPage from "../pages/users/edit";
 import PeriodListPage from "../pages/periods/list";
 import PeriodCreatePage from "../pages/periods/create";
 import PeriodEditPage from "../pages/periods/edit";
+import CriteriaScaleListPage from "../pages/criteria-scales/list";
+import CriteriaScaleCreatePage from "../pages/criteria-scales/create";
+import CriteriaScaleEditPage from "../pages/criteria-scales/edit";
+import AssessmentListPage from "../pages/assessments/list";
+import AssessmentCreatePage from "../pages/assessments/create";
+import AssessmentEditPage from "../pages/assessments/edit";
+import DashboardPage from "../pages/dashboard/page";
 
 export const AppRoutes = () => {
   return (
@@ -34,7 +41,7 @@ export const AppRoutes = () => {
           </Authenticated>
         }
       >
-        <Route index element={<div>Dashboard Page</div>} />
+        <Route index element={<DashboardPage />} />
 
         <Route path="/kriteria">
           <Route index element={<CriteriaListPage />} />
@@ -58,6 +65,18 @@ export const AppRoutes = () => {
           <Route index element={<PeriodListPage />} />
           <Route path="create" element={<PeriodCreatePage />} />
           <Route path="edit/:id" element={<PeriodEditPage />} />
+        </Route>
+
+        <Route path="/skala-kriteria">
+          <Route index element={<CriteriaScaleListPage />} />
+          <Route path="create" element={<CriteriaScaleCreatePage />} />
+          <Route path="edit/:id" element={<CriteriaScaleEditPage />} />
+        </Route>
+
+        <Route path="/penilaian">
+          <Route index element={<AssessmentListPage />} />
+          <Route path="create" element={<AssessmentCreatePage />} />
+          <Route path="edit/:id" element={<AssessmentEditPage />} />
         </Route>
 
         <Route path="*" element={<ErrorComponent />} />
