@@ -56,7 +56,12 @@ function App() {
               <NotificationProvider />
               <RefineKbar />
               <UnsavedChangesNotifier />
-              <DocumentTitleHandler />
+              <DocumentTitleHandler
+                handler={({ resource }) => {
+                  const pageTitle = resource?.meta?.label || resource?.name || "Dashboard";
+                  return `${pageTitle} - SPK Topsis`;
+                }}
+              />
             </Refine>
             <DevtoolsPanel />
           </DevtoolsProvider>
