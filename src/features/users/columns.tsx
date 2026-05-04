@@ -11,10 +11,7 @@ export const usersColumns: ColumnTable<IUser>[] = [
     key: "email",
     title: "Email",
   },
-  {
-    key: "phoneNumber",
-    title: "Phone Number",
-  },
+
   {
     key: "role",
     title: "Role",

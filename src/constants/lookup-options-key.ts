@@ -4,6 +4,7 @@ export const RESOURCE_LOOKUP_OPTIONS_KEY = {
   },
   CRITERIAS: "lookups.criterias",
   CANDIDATES: "lookups.candidates",
+  PERIODS: "lookups.periods",
 };
 
 

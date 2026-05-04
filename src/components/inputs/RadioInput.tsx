@@ -10,6 +10,7 @@ import {
 import { getFieldError, toEachCapitalize } from "@/utils/common";
 import FormController from "../form/FormController";
 import type { BaseInputProps } from "./types";
+import { useFormMode } from "@/contexts/FormModeContext";
 
 export interface RadioOption {
   label: string;
@@ -49,6 +50,7 @@ export const RadioInput: React.FC<RadioInputProps> = ({
   cols = 2,
   additionalRules,
 }) => {
+  const { isShow } = useFormMode();
   const labelText = fieldLabel ?? toEachCapitalize(fieldName);
 
   return (
@@ -68,7 +70,7 @@ export const RadioInput: React.FC<RadioInputProps> = ({
               onChange={onChange}
               orientation={variant === "card" ? "horizontal" : orientation}
               isRequired={isRequired}
-              isDisabled={isDisabled}
+              isDisabled={isDisabled || isShow}
               isInvalid={!!fieldError}
             >
               <Label isRequired={isRequired} isInvalid={!!fieldError}>

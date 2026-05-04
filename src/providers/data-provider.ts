@@ -34,6 +34,18 @@ function resolvePagination(pagination: Pagination | undefined): {
   return { page: currentPage, pageSize };
 }
 
+// Normalize each record to ensure it has an 'id' field
+function normalizeRecords(records: any[]): BaseRecord[] {
+  return records.map((record) => {
+    if (record.id) return record;
+    // If no id, try to find a *Id field (e.g., assessmentId, periodId)
+    const idField = Object.entries(record).find(
+      ([key]) => key.endsWith("Id") && !key.startsWith("_")
+    );
+    return idField ? { ...record, id: idField[1] } : record;
+  });
+}
+
 // ---------------------------------------------------------------------------
 // Sorters / filters helpers
 // ---------------------------------------------------------------------------
@@ -68,10 +80,11 @@ export const dataProvider = {
     pagination,
     sorters,
     filters,
+    meta,
   }: GetListParams) => {
     const { page, pageSize } = resolvePagination(pagination);
 
-    const params: Record<string, string> = {
+    const params: Record<string, unknown> = {
       page: String(page),
       limit: String(pageSize),
     };
@@ -82,13 +95,28 @@ export const dataProvider = {
     const filtersParam = buildFiltersParam(filters);
     if (filtersParam) params.filters = filtersParam;
 
+    if (meta?.params) Object.assign(params, meta.params);
+
     const { data: envelope } = await axiosInstance.get<
       ApiListResponse<BaseRecord>
-    >(`/${resource}`, { params });
+    >(`/${resource}`, { params: params as Record<string, string> });
+
+    // Handle both array responses and nested array responses (e.g., { candidateId, candidateName, history: [...] })
+    let dataArray = envelope.data;
+    if (!Array.isArray(dataArray)) {
+      // Try to find an array property (e.g., 'history', 'items', 'records')
+      const arrayProperty = Object.values(dataArray ?? {}).find(
+        (val) => Array.isArray(val)
+      );
+      dataArray = Array.isArray(arrayProperty) ? arrayProperty : [];
+    }
+
+    // Normalize records to ensure each has an 'id' field
+    const normalizedData = normalizeRecords(dataArray);
 
     return {
-      data: envelope.data ?? [],
-      total: envelope.total ?? 0,
+      data: normalizedData,
+      total: envelope.total ?? normalizedData.length ?? 0,
     };
   },
 

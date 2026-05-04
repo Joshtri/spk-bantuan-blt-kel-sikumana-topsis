@@ -8,6 +8,7 @@ import {
 import FormController from "../form/FormController";
 import type { BaseInputProps } from "./types";
 import { toEachCapitalize, getFieldError } from "../../utils/common";
+import { useFormMode } from "@/contexts/FormModeContext";
 
 interface TextAreaInputProps extends BaseInputProps {
   isHorizontal?: boolean;
@@ -37,6 +38,7 @@ export const TextAreaInput: React.FC<TextAreaInputProps> = ({
   maxLength,
   showCount = false,
 }) => {
+  const { isShow } = useFormMode();
   const labelText = fieldLabel ?? toEachCapitalize(fieldName);
 
   return (
@@ -62,7 +64,7 @@ export const TextAreaInput: React.FC<TextAreaInputProps> = ({
               value={textValue}
               onChange={onChange}
               isRequired={isRequired}
-              isDisabled={isDisabled}
+              isDisabled={isDisabled || isShow}
               isInvalid={!!fieldError}
               className="w-full"
             >

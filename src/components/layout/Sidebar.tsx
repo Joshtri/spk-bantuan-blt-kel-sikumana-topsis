@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useLogout, useMenu } from "@refinedev/core";
+import { useLogout, useMenu, useCan } from "@refinedev/core";
 import { NavLink } from "react-router";
 import { Button, cn, Tooltip } from "@heroui/react";
 import {
@@ -21,61 +21,74 @@ function ResourceIcon({ icon }: { icon?: ReactNode }) {
   );
 }
 
+interface MenuItemWrapperProps {
+  item: ReturnType<typeof useMenu>["menuItems"][number];
+  isCollapsed: boolean;
+  closeSidebar: () => void;
+}
+
+function MenuItemWrapper({ item, isCollapsed, closeSidebar }: MenuItemWrapperProps) {
+  const { data } = useCan({
+    resource: item.name,
+    action: "list",
+  });
+
+  const hasAccess = data?.can ?? false;
+  const label = item.label ?? item.name;
+
+  console.log(`[Sidebar] Filtering ${item.name}: ${hasAccess ? "✓ visible" : "✗ hidden"}`);
+
+  if (!hasAccess) return null;
+
+  const navLink = (
+    <NavLink
+      to={item.route ?? "/"}
+      end={item.route === "/"}
+      onClick={() => closeSidebar()}
+      className={({ isActive }) =>
+        cn(
+          "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
+          isCollapsed ? "justify-center px-0 w-10 mx-auto" : "",
+          isActive
+            ? "bg-white/15 text-white"
+            : "text-slate-400 hover:bg-white/8 hover:text-slate-100",
+        )
+      }
+    >
+      {({ isActive }) => (
+        <>
+          {isActive && !isCollapsed && (
+            <span className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-r-full bg-indigo-400" />
+          )}
+          <ResourceIcon icon={item.meta?.icon} />
+          {!isCollapsed && (
+            <span className="truncate leading-none">{label}</span>
+          )}
+        </>
+      )}
+    </NavLink>
+  );
+
+  if (isCollapsed) {
+    return (
+      <li key={item.key}>
+        <Tooltip>
+          <Tooltip.Trigger className="block w-full">
+            {navLink}
+          </Tooltip.Trigger>
+          <Tooltip.Content placement="right">{label}</Tooltip.Content>
+        </Tooltip>
+      </li>
+    );
+  }
+
+  return <li key={item.key}>{navLink}</li>;
+}
+
 export function Sidebar() {
   const { menuItems } = useMenu();
   const { mutate: logout } = useLogout();
   const { isOpen, isCollapsed, closeSidebar } = useSidebar();
-
-  const navLink = (item: (typeof menuItems)[number]) => {
-    const label = item.label ?? item.name;
-    return (
-      <NavLink
-        to={item.route ?? "/"}
-        end={item.route === "/"}
-        onClick={() => closeSidebar()}
-        className={({ isActive }) =>
-          cn(
-            "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
-            isCollapsed ? "justify-center px-0 w-10 mx-auto" : "",
-            isActive
-              ? "bg-white/15 text-white"
-              : "text-slate-400 hover:bg-white/8 hover:text-slate-100",
-          )
-        }
-      >
-        {({ isActive }) => (
-          <>
-            {isActive && !isCollapsed && (
-              <span className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-r-full bg-indigo-400" />
-            )}
-            <ResourceIcon icon={item.meta?.icon} />
-            {!isCollapsed && (
-              <span className="truncate leading-none">{label}</span>
-            )}
-          </>
-        )}
-      </NavLink>
-    );
-  };
-
-  const navItem = (item: (typeof menuItems)[number]) => {
-    const label = item.label ?? item.name;
-
-    if (isCollapsed) {
-      return (
-        <li key={item.key}>
-          <Tooltip>
-            <Tooltip.Trigger className="block w-full">
-              {navLink(item)}
-            </Tooltip.Trigger>
-            <Tooltip.Content placement="right">{label}</Tooltip.Content>
-          </Tooltip>
-        </li>
-      );
-    }
-
-    return <li key={item.key}>{navLink(item)}</li>;
-  };
 
   return (
     <>
@@ -138,7 +151,16 @@ export function Sidebar() {
 
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto px-3 py-4">
-          <ul className="flex flex-col gap-0.5">{menuItems.map(navItem)}</ul>
+          <ul className="flex flex-col gap-0.5">
+            {menuItems.map((item) => (
+              <MenuItemWrapper
+                key={item.key}
+                item={item}
+                isCollapsed={isCollapsed}
+                closeSidebar={closeSidebar}
+              />
+            ))}
+          </ul>
         </nav>
 
         {/* Sign out */}

@@ -49,6 +49,31 @@ export interface CustomActionButton {
   render?: React.ReactNode;
 }
 
+export interface CustomRowActionMenuItem<T> {
+  key: string;
+  label: string;
+  icon?: React.ReactNode;
+  onPress?: (item: T) => void | Promise<void>;
+  isDisabled?: boolean;
+}
+
+export interface CustomRowActionButton<T> {
+  key: string;
+  /**
+   * When true, renders as a vertical dots dropdown trigger and uses `menuItems`.
+   * When false (default), renders as a standalone icon button next to Edit/Show/Delete.
+   */
+  isVertical?: boolean;
+  label?: string;
+  icon?: React.ReactNode;
+  ariaLabel?: string;
+  variant?: "primary" | "secondary" | "tertiary" | "outline" | "ghost" | "danger";
+  onPress?: (item: T) => void | Promise<void>;
+  menuItems?: CustomRowActionMenuItem<T>[];
+  isVisible?: (item: T) => boolean;
+  isDisabled?: (item: T) => boolean;
+}
+
 export interface CustomFilterOption {
   label: string;
   value: string | boolean;

@@ -6,6 +6,7 @@ import React from "react";
 export default function UsersListPage() {
   return (
     <DataTable
+      label="Akun User Management"
       resource={"users"}
       actionColumns={[
         ActionButton.Create,

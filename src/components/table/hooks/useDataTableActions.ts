@@ -2,6 +2,7 @@ import { useDelete, useInvalidate, useNavigation } from "@refinedev/core";
 
 interface UseDataTableActionsOptions {
   resource: string;
+  resourceDelete?: string; // Optional custom resource name for delete action
 }
 
 interface UseDataTableActionsResult {
@@ -13,6 +14,7 @@ interface UseDataTableActionsResult {
 
 export function useDataTableActions({
   resource,
+  resourceDelete,
 }: UseDataTableActionsOptions): UseDataTableActionsResult {
   const { create, edit, show } = useNavigation();
   const { mutateAsync: deleteAsync } = useDelete();
@@ -26,7 +28,7 @@ export function useDataTableActions({
       await deleteAsync(
         {
           id,
-          resource,
+          resource: resourceDelete || resource,
           successNotification: () => ({
             message: "Successfully deleted!",
             type: "success",

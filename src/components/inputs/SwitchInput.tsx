@@ -3,6 +3,7 @@ import { Switch, Label, Description } from "@heroui/react";
 import FormController from "../form/FormController";
 import type { BaseInputProps } from "./types";
 import { toEachCapitalize, getFieldError } from "@/utils/common";
+import { useFormMode } from "@/contexts/FormModeContext";
 
 interface SwitchInputProps extends BaseInputProps {
   size?: "sm" | "md" | "lg";
@@ -21,6 +22,7 @@ export const SwitchInput: React.FC<SwitchInputProps> = ({
   additionalRules,
   size = "md",
 }) => {
+  const { isShow } = useFormMode();
   const labelText = fieldLabel ?? toEachCapitalize(fieldName);
 
   return (
@@ -40,7 +42,7 @@ export const SwitchInput: React.FC<SwitchInputProps> = ({
               name={name}
               isSelected={!!value}
               onChange={onChange}
-              isDisabled={isDisabled}
+              isDisabled={isDisabled || isShow}
               size={size}
             >
               <Switch.Control>

@@ -3,7 +3,9 @@ import { ICandidateRecipient } from "./interfaces";
 import { BooleanChip } from "@/components/boolean-chip";
 import { Link } from "@heroui/react";
 
-export const candidateRecipientColumns: ColumnTable<ICandidateRecipient>[] = [
+export const getCandidateRecipientColumns = (
+  isHeadOfOffice: boolean,
+): ColumnTable<ICandidateRecipient>[] => [
   {
     key: "nik",
     title: "NIK",
@@ -20,14 +22,17 @@ export const candidateRecipientColumns: ColumnTable<ICandidateRecipient>[] = [
     key: "isHaveAccount",
     title: "Sudah Punya Akun",
     render: (item) =>
-      item.isHaveAccount ? (
+      item.isHaveAccount || isHeadOfOffice ? (
         <BooleanChip
           value={item.isHaveAccount}
           trueLabel="Sudah"
           falseLabel="Belum"
         />
       ) : (
-        <Link href="/users/create" className="no-underline">
+        <Link
+          href={`/users/create?candidateRecipientId=${item.id}`}
+          className="no-underline"
+        >
           <BooleanChip
             value={item.isHaveAccount}
             trueLabel="Sudah"
@@ -35,5 +40,16 @@ export const candidateRecipientColumns: ColumnTable<ICandidateRecipient>[] = [
           />
         </Link>
       ),
+  },
+  {
+    key: "isFilledCurrentPeriod",
+    title: "Sudah Mengisi Periode Aktif",
+    render: (item) => (
+      <BooleanChip
+        value={item.isFilledCurrentPeriod ?? false}
+        trueLabel="Sudah"
+        falseLabel="Belum"
+      />
+    ),
   },
 ];

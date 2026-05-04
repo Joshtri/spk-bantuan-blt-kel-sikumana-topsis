@@ -22,6 +22,7 @@ export interface IAssessment {
   candidateName: string;
   assessedByUserId: string;
   assessedByUsername: string;
+  assessmentId: string;
   details: IAssessmentDetail[];
   result?: IAssessmentResult;
 }

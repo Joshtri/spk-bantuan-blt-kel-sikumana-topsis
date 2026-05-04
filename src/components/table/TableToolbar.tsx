@@ -28,6 +28,7 @@ import {
 
 interface TableToolbarProps<T extends BaseRecord> {
   label?: string;
+  description?: string;
   isCardMode: boolean;
   withSearch: boolean;
   searchValue: string;
@@ -48,6 +49,7 @@ interface TableToolbarProps<T extends BaseRecord> {
 
 export function TableToolbar<T extends BaseRecord>({
   label,
+  description,
   isCardMode,
   withSearch,
   searchValue,
@@ -64,7 +66,15 @@ export function TableToolbar<T extends BaseRecord>({
   return (
     <div className="mb-5 flex w-full flex-col gap-y-4">
       {label && (
-        <Heading className="my-auto text-xl font-semibold">{label}</Heading>
+        <div>
+          <Heading className="my-auto text-xl font-semibold">{label}</Heading>
+          {description && (
+            <p className="mt-1 text-sm text-default-500">{description}</p>
+          )}
+        </div>
+      )}
+      {!label && description && (
+        <p className="text-sm text-default-500">{description}</p>
       )}
 
       <div

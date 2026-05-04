@@ -17,8 +17,12 @@ export default function CriteriaEditPage() {
   });
 
   return (
-    <>
-      <CreateOrEditWrapper methods={methods} tabs={tabsCriteria} />
-    </>
+    <CreateOrEditWrapper
+      methods={methods}
+      tabs={tabsCriteria()}
+      title="Kriteria"
+      listRoute="/kriteria"
+      isEdit
+    />
   );
 }

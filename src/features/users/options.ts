@@ -2,7 +2,7 @@ import type { IUser } from "./interfaces";
 
 export const roleOptions: { key: IUser["role"]; label: string; value: IUser["role"] }[] = [
     { key: "RECIPIENT", label: "Calon Penerima", value: "RECIPIENT" },
-    { key: "HEAD_OF_OFFICE", label: "Kepala Kantor Lurah", value: "HEAD_OF_OFFICE" },
+    { key: "HEAD_OF_OFFICE", label: "Lurah", value: "HEAD_OF_OFFICE" },
     { key: "ADMIN", label: "Admin", value: "ADMIN" },
 ];
 

@@ -1,30 +1,21 @@
-import CreateOrEditWrapper from "@/components/form/CreateOrEditWrapper";
-import { tabsAssessment } from "@/features/assessments/tabs";
-import { useForm } from "@refinedev/react-hook-form";
-import type { FieldValues } from "react-hook-form";
+import { useParsed } from "@refinedev/core";
+import { QuestionnaireWrapper } from "@/features/assessments/components";
 
 export default function AssessmentCreatePage() {
-  const methods = useForm({
-    refineCoreProps: {
-      resource: "assessments",
-    },
-  });
+  const { id } = useParsed();
 
-  const handleSave = async (data: FieldValues) => {
-    const criteriaScaleIds = Object.entries(data)
-      .filter(([key]) => key.startsWith("criteriaScale_"))
-      .map(([, value]) => value as string)
-      .filter(Boolean);
+  if (!id) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-2 py-20 text-center">
+        <p className="text-base font-semibold text-default-700">
+          Calon penerima tidak ditemukan
+        </p>
+        <p className="text-sm text-default-500">
+          Akses halaman penilaian melalui daftar Calon Penerima.
+        </p>
+      </div>
+    );
+  }
 
-    await methods.refineCore.onFinish({
-      periodId: data.periodId,
-      candidateId: data.candidateId,
-      assessedByUserId: data.assessedByUserId,
-      criteriaScaleIds,
-    });
-  };
-
-  return (
-    <CreateOrEditWrapper methods={methods} tabs={tabsAssessment} onSave={handleSave} />
-  );
+  return <QuestionnaireWrapper candidateId={String(id)} />;
 }

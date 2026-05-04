@@ -11,6 +11,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import FormController from "../form/FormController";
 import type { BaseInputProps } from "./types";
 import { toEachCapitalize, getFieldError } from "../../utils/common";
+import { useFormMode } from "@/contexts/FormModeContext";
 
 interface TextInputProps extends BaseInputProps {
   isPhoneNumber?: boolean;
@@ -61,6 +62,7 @@ function PasswordField({
   fieldError,
 }: PasswordFieldProps) {
   const [visible, setVisible] = useState(false);
+  const { isShow } = useFormMode();
 
   return (
     <TextField
@@ -69,7 +71,7 @@ function PasswordField({
       value={value ?? ""}
       onChange={onChange}
       isRequired={isRequired}
-      isDisabled={isDisabled}
+      isDisabled={isDisabled || isShow}
       isInvalid={isInvalid}
       className="w-full"
     >
@@ -126,6 +128,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   bottomContent,
   additionalRules,
 }) => {
+  const { isShow } = useFormMode();
   const labelText = fieldLabel ?? toEachCapitalize(fieldName);
   const inputType = isEmail ? "email" : isPhoneNumber ? "tel" : "text";
 
@@ -173,7 +176,7 @@ export const TextInput: React.FC<TextInputProps> = ({
                 onChange={onChange}
                 onBlur={onBlur}
                 isRequired={isRequired}
-                isDisabled={isDisabled}
+                isDisabled={isDisabled || isShow}
                 isInvalid={!!fieldError}
                 labelText={labelText}
                 hideLabel={hideLabel}
@@ -195,7 +198,7 @@ export const TextInput: React.FC<TextInputProps> = ({
               value={value ?? ""}
               onChange={onChange}
               isRequired={isRequired}
-              isDisabled={isDisabled}
+              isDisabled={isDisabled || isShow}
               isInvalid={!!fieldError}
               className="w-full"
             >

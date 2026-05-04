@@ -14,11 +14,11 @@ export default function DetailUser() {
 
   return (
     <>
-      {/* {isEdit && <TextInput fieldName="id" isDisabled />} */}
       <AutoCompleteInput
         fieldName="candidateRecipientId"
         fieldLabel="Calon Penerima Bantuan"
         options={candidatesOptions}
+        isDisabled={isLoading}
       />
       <TextInput fieldName={"username"} isRequired />
       <TextInput fieldName={"email"} isRequired isEmail />
@@ -30,11 +30,11 @@ export default function DetailUser() {
           isEdit ? "Leave empty if you don't want to change the password" : ""
         }
       />
-      <PhoneNumberInput
+      {/* <PhoneNumberInput
         isRequired
         fieldName={"phoneNumber"}
         fieldLabel="Nomor HP / Whats App"
-      />{" "}
+      />{" "} */}
       <AutoCompleteInput options={roleOptions} fieldName={"role"} isRequired />
     </>
   );

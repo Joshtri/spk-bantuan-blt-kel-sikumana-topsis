@@ -10,6 +10,7 @@ import { parseDate, type DateValue } from "@internationalized/date";
 import FormController from "../form/FormController";
 import type { BaseInputProps } from "./types";
 import { toEachCapitalize, getFieldError } from "@/utils/common";
+import { useFormMode } from "@/contexts/FormModeContext";
 
 interface DatePickerInputProps extends BaseInputProps {
   minValue?: string;
@@ -39,6 +40,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
   minValue,
   maxValue,
 }) => {
+  const { isShow } = useFormMode();
   const labelText = fieldLabel ?? toEachCapitalize(fieldName);
 
   const parsedMinValue = tryParseDate(minValue);
@@ -67,7 +69,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
               value={dateValue ?? null}
               onChange={handleChange}
               isRequired={isRequired}
-              isDisabled={isDisabled}
+              isDisabled={isDisabled || isShow}
               isInvalid={!!fieldError}
               minValue={parsedMinValue}
               maxValue={parsedMaxValue}

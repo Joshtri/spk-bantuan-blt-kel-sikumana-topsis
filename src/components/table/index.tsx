@@ -1,19 +1,6 @@
 import { useMemo, useState } from "react";
-import { type BaseRecord } from "@refinedev/core";
-import {
-  Button,
-  cn,
-  EmptyState,
-  Pagination,
-  Spinner,
-  Table,
-} from "@heroui/react";
-import {
-  PencilIcon,
-  EyeIcon,
-  TrashIcon,
-  InboxIcon,
-} from "@heroicons/react/24/outline";
+import type { BaseRecord } from "@refinedev/core";
+import { Pagination, Spinner } from "@heroui/react";
 
 import {
   ActionButton,
@@ -21,11 +8,12 @@ import {
   type ColumnTable,
   type CustomActionButton,
   type CustomFilter,
+  type CustomRowActionButton,
 } from "./types";
 import { useDataTableData } from "./hooks/useDataTableData";
 import { useDataTableActions } from "./hooks/useDataTableActions";
 import { TableToolbar } from "./TableToolbar";
-import { AlertDialog } from "@/components/alert-dialog";
+import { CardView, TableView } from "./views";
 
 /** Returns page numbers to render, with null representing an ellipsis. */
 function buildPageItems(current: number, total: number): (number | null)[] {
@@ -46,35 +34,32 @@ function buildPageItems(current: number, total: number): (number | null)[] {
   return items;
 }
 
-// Actions that belong to each row (not toolbar-level)
-const ROW_ACTION_BUTTONS: ActionButton[] = [
-  ActionButton.Edit,
-  ActionButton.Show,
-  ActionButton.Delete,
-  ActionButton.Review,
-  ActionButton.Copy,
-];
-
 interface DataTableProps<T extends BaseRecord> {
   resource: string;
+  resourceDelete?: string; // Optional custom resource name for delete action
   columns: ColumnTable<T>[];
   actionColumns?: ActionButton[];
   label?: string;
+  description?: string;
   pageSize?: number;
   withSearch?: boolean;
   customActionButtons?: CustomActionButton[];
+  customRowActionButtons?: CustomRowActionButton<T>[];
   customFilters?: CustomFilter<T>[];
   onActionPress?: Partial<ActionButtonHandlerMap<T>>;
 }
 
 export default function DataTable<T extends BaseRecord>({
   resource,
+  resourceDelete = undefined,
   columns,
   actionColumns = [],
   label,
+  description,
   pageSize = 10,
   withSearch = false,
   customActionButtons = [],
+  customRowActionButtons = [],
   customFilters = [],
   onActionPress,
 }: DataTableProps<T>) {
@@ -90,7 +75,7 @@ export default function DataTable<T extends BaseRecord>({
   } = useDataTableData<T>({ resource, pageSize });
 
   const { handleCreate, handleEdit, handleShow, handleDelete } =
-    useDataTableActions({ resource });
+    useDataTableActions({ resource, resourceDelete });
 
   const [searchValue, setSearchValue] = useState("");
   const [filterValues, setFilterValues] = useState<
@@ -112,23 +97,13 @@ export default function DataTable<T extends BaseRecord>({
     await handleDelete(row.id as string | number);
   };
 
-  // Append an Actions column only when there are row-level actions
-  const columnsTable = useMemo<ColumnTable<T>[]>(() => {
-    const hasRowActions = actionColumns.some((a) =>
-      ROW_ACTION_BUTTONS.includes(a),
-    );
-    return [
-      ...columns,
-      ...(hasRowActions
-        ? ([{ key: "actions", title: "Actions", align: "end" }] as ColumnTable<T>[])
-        : []),
-    ];
-  }, [columns, actionColumns]);
+  // No longer needed - TableView handles actions column
 
   return (
     <div className="flex flex-col gap-4">
       <TableToolbar<T>
         label={label}
+        description={description}
         isCardMode={false}
         withSearch={withSearch}
         searchValue={searchValue}
@@ -154,121 +129,27 @@ export default function DataTable<T extends BaseRecord>({
         <div className="py-6 text-center text-danger">Failed to load data.</div>
       ) : (
         <>
-          {/* Table */}
-          <Table>
-            <Table.ScrollContainer>
-              <Table.Content
-                aria-label={label ?? `${resource} table`}
-                className="min-w-150"
-              >
-                <Table.Header>
-                  {columnsTable.map((column, idx) => (
-                    <Table.Column
-                      key={column.key}
-                      className={cn(
-                        column.align === "center" && "text-center",
-                        column.align === "end" && "text-end",
-                        column.key === "actions" && "pr-12",
-                        idx === 0 && "pl-8",
-                      )}
-                      isRowHeader={
-                        column.isRowHeader ??
-                        (columnsTable[0]?.key === "actions"
-                          ? idx === 1
-                          : idx === 0)
-                      }
-                    >
-                      {column.title}
-                    </Table.Column>
-                  ))}
-                </Table.Header>
+          {/* Card View for mobile/tablet */}
+          <CardView
+            rows={rows}
+            columns={columns}
+            actionColumns={actionColumns}
+            customRowActionButtons={customRowActionButtons}
+            onEdit={handleEdit}
+            onShow={handleShow}
+            onDelete={handleConfirmDelete}
+          />
 
-                <Table.Body
-                  items={rows}
-                  renderEmptyState={() => (
-                    <EmptyState className="flex h-full w-full flex-col items-center justify-center gap-4 text-center">
-                      {/*<Icon className="size-6 text-muted" icon="gravity-ui:tray" />*/}
-                      <InboxIcon className="size-6 text-muted" />
-                      <span className="text-sm text-muted">
-                        No results found
-                      </span>
-                    </EmptyState>
-                  )}
-                >
-                  {(row) => (
-                    <Table.Row key={String(row.id)}>
-                      {columnsTable.map((column, idx) => (
-                        <Table.Cell
-                          key={`${String(row.id)}-${column.key}`}
-                          className={cn(
-                            column.align === "center" && "text-center",
-                            column.align === "end" && "text-end",
-                            column.key === "actions" && "pr-12",
-                            idx === 0 && "pl-8",
-                          )}
-                        >
-                          {column.key === "actions" ? (
-                            <div className="flex items-center justify-end gap-1">
-                              {actionColumns.includes(ActionButton.Edit) && (
-                                <Button
-                                  variant="outline"
-                                  isIconOnly
-                                  size="sm"
-                                  aria-label="Edit"
-                                  onPress={() =>
-                                    handleEdit(row.id as string | number)
-                                  }
-                                >
-                                  <PencilIcon className="h-3 w-3" />
-                                </Button>
-                              )}
-                              {actionColumns.includes(ActionButton.Show) && (
-                                <Button
-                                  variant="ghost"
-                                  isIconOnly
-                                  size="sm"
-                                  aria-label="View"
-                                  onPress={() =>
-                                    handleShow(row.id as string | number)
-                                  }
-                                >
-                                  <EyeIcon className="h-4 w-4" />
-                                </Button>
-                              )}
-                              {actionColumns.includes(ActionButton.Delete) && (
-                                <AlertDialog
-                                  triggerLabel="Delete"
-                                  triggerContent={
-                                    <TrashIcon className="h-4 w-4" />
-                                  }
-                                  triggerIsIconOnly
-                                  triggerAriaLabel="Delete"
-                                  title="Delete confirmation"
-                                  description="Are you sure you want to delete this data?"
-                                  confirmLabel="Delete"
-                                  cancelLabel="Cancel"
-                                  confirmVariant="danger"
-                                  onConfirm={() =>
-                                    handleConfirmDelete(row as T)
-                                  }
-                                />
-                              )}
-                            </div>
-                          ) : column.render ? (
-                            column.render(row as T)
-                          ) : column.valueGetter ? (
-                            column.valueGetter(row as T)
-                          ) : (
-                            String(row[column.key] ?? "-")
-                          )}
-                        </Table.Cell>
-                      ))}
-                    </Table.Row>
-                  )}
-                </Table.Body>
-              </Table.Content>
-            </Table.ScrollContainer>
-          </Table>
+          {/* Table View for desktop */}
+          <TableView
+            rows={rows}
+            columns={columns}
+            actionColumns={actionColumns}
+            customRowActionButtons={customRowActionButtons}
+            onEdit={handleEdit}
+            onShow={handleShow}
+            onDelete={handleConfirmDelete}
+          />
 
           {/* Pagination */}
           {totalPages > 1 && (

@@ -1,9 +1,17 @@
 import CreateOrEditWrapper from "@/components/form/CreateOrEditWrapper";
-import DetailCriteria from "@/features/criterias/form/Detail";
 import { ICriteria } from "@/features/criterias/interfaces";
 import { tabsCriteria } from "@/features/criterias/tabs";
 import { useForm } from "@refinedev/react-hook-form";
-import React from "react";
+import { useCustom } from "@refinedev/core";
+import { useEffect } from "react";
+
+interface ApiResponse<T> {
+  data: T;
+}
+
+interface ICodePosition {
+  code: string;
+}
 
 export default function CriteriaCreatePage() {
   const methods = useForm<ICriteria>({
@@ -14,13 +22,29 @@ export default function CriteriaCreatePage() {
       name: "",
       weight: 0,
       code: "",
-      criteria_type: "Cost",
+      criteriaType: "Cost",
     },
   });
 
+  const { result: codePositionData } = useCustom<ApiResponse<ICodePosition>>({
+    url: "criterias/code-position",
+    method: "get",
+  });
+
+  useEffect(() => {
+    const code = codePositionData?.data?.data?.code;
+    if (code) {
+      methods.setValue("code", code);
+    }
+  }, [codePositionData, methods]);
+
   return (
-    <>
-      <CreateOrEditWrapper methods={methods} tabs={tabsCriteria} />
-    </>
+    <CreateOrEditWrapper
+      methods={methods}
+      tabs={tabsCriteria()}
+      title="Kriteria"
+      listRoute="/kriteria"
+    />
   );
 }
+

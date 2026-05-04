@@ -2,6 +2,7 @@ import { NumberField, Label, Description, FieldError } from "@heroui/react";
 import FormController from "../form/FormController";
 import type { BaseInputProps } from "./types";
 import { toEachCapitalize, getFieldError } from "@/utils/common";
+import { useFormMode } from "@/contexts/FormModeContext";
 
 interface NumberInputProps extends BaseInputProps {
   minValue?: number;
@@ -26,6 +27,7 @@ export const NumberInput: React.FC<NumberInputProps> = ({
   step,
   formatOptions,
 }) => {
+  const { isShow } = useFormMode();
   const labelText = fieldLabel ?? toEachCapitalize(fieldName);
 
   return (
@@ -46,7 +48,7 @@ export const NumberInput: React.FC<NumberInputProps> = ({
               value={value as number | undefined}
               onChange={onChange}
               isRequired={isRequired}
-              isDisabled={isDisabled}
+              isDisabled={isDisabled || isShow}
               isInvalid={!!fieldError}
               minValue={minValue}
               maxValue={maxValue}

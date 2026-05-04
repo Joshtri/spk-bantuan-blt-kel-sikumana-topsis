@@ -10,6 +10,7 @@ import {
 import FormController from "@/components/form/FormController";
 import type { BaseInputProps } from "./types";
 import { toEachCapitalize, getFieldError } from "@/utils/common";
+import { useFormMode } from "@/contexts/FormModeContext";
 import type { SelectItemType } from "@/interfaces/common";
 
 type OptionItem = SelectItemType | { id: string; label: string };
@@ -42,6 +43,7 @@ export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
   options,
   selectionMode = "single",
 }) => {
+  const { isShow } = useFormMode();
   const labelText = fieldLabel ?? toEachCapitalize(fieldName);
   const { contains } = useFilter({ sensitivity: "base" });
 
@@ -62,9 +64,10 @@ export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
               onSelectionChange={(key) => onChange(key)}
               selectionMode={selectionMode}
               aria-label={labelText}
-              isDisabled={isDisabled}
+              isDisabled={isDisabled || isShow}
               isInvalid={!!fieldError}
               isRequired={isRequired}
+              variant="primary"
               fullWidth
             >
               {!hideLabel && <Label>{labelText}</Label>}

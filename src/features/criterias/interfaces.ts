@@ -4,4 +4,5 @@ export interface ICriteria {
     code: string;
     criteriaType: "Cost" | "Benefit";
     weight: number;
+    totalScale?: number;
 }

@@ -9,4 +9,6 @@ export interface ICandidateRecipient {
   address: string;
   phoneNumber: string;
   isHaveAccount: boolean;
+  isFilledCurrentPeriod?: boolean;
+  assessmentId?: string;
 }

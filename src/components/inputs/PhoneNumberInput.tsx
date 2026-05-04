@@ -10,6 +10,7 @@ import { ClipboardDocumentIcon, CheckIcon } from "@heroicons/react/24/outline";
 import FormController from "../form/FormController";
 import type { BaseInputProps } from "./types";
 import { getFieldError, toEachCapitalize } from "@/utils/common";
+import { useFormMode } from "@/contexts/FormModeContext";
 
 interface PhoneNumberInputProps extends BaseInputProps {
   placeholder?: string;
@@ -68,6 +69,7 @@ export const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
   bottomContent,
   additionalRules,
 }) => {
+  const { isShow } = useFormMode();
   const labelText = fieldLabel ?? toEachCapitalize(fieldName);
   const [copied, setCopied] = useState(false);
 
@@ -113,7 +115,7 @@ export const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
               onChange={handleChange}
               onBlur={onBlur}
               isRequired={isRequired}
-              isDisabled={isDisabled}
+              isDisabled={isDisabled || isShow}
               isInvalid={!!fieldError}
               className="w-full"
             >
@@ -136,7 +138,7 @@ export const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
                   <button
                     type="button"
                     aria-label="Copy phone number"
-                    disabled={!displayValue || isDisabled}
+                    disabled={!displayValue || isDisabled || isShow}
                     onClick={handleCopy}
                     className="px-1 text-default-400 transition-colors hover:text-default-700 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none"
                   >

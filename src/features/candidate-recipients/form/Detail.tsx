@@ -11,6 +11,13 @@ export default function DetailCandidateRecipient() {
       <TextInput
         fieldName={"nik"}
         fieldLabel="Nomor Induk Kependudukan"
+        // validation only allow number and must be 16 digits.
+        additionalRules={{
+          pattern: {
+            value: /^[0-9]{16}$/,
+            message: "NIK harus berupa angka dan 16 digit",
+          },
+        }}
         isRequired
       />
       <TextInput

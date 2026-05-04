@@ -4,7 +4,7 @@ import { Breadcrumbs } from "@heroui/react";
 export const Breadcrumb = () => {
   const { breadcrumbs } = useBreadcrumb();
 
-  if (breadcrumbs.length === 0) return null;
+  if (breadcrumbs.length <= 1) return null;
 
   return (
     // Wrapper pill — background + border agar tidak polosan

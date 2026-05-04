@@ -16,8 +16,10 @@ import { authProvider } from "./providers/auth-provider";
 import { dataProvider } from "./providers/data-provider";
 import { notificationProvider } from "./providers/notification/notification-provider";
 import { NotificationProvider } from "./providers/notification";
+import { accessControlProvider } from "./providers/access-control-provider";
 import { LookupOptionsProvider } from "./contexts/lookupOptions";
-import AppRoutes from "./app/routes/app-routes";
+import AppRoutes from "./app/routes/app-routes.tsx";
+// import AppRoutes from "./app/routes/app-routes";
 
 /** Bridges HeroUI's React Aria href-based navigation with react-router. */
 function HeroUIRouterProvider({ children }: PropsWithChildren) {
@@ -43,6 +45,7 @@ function App() {
               authProvider={authProvider}
               notificationProvider={notificationProvider}
               resources={RESOURCES}
+              accessControlProvider={accessControlProvider}
               options={{
                 syncWithLocation: true,
                 warnWhenUnsavedChanges: true,

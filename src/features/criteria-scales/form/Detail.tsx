@@ -11,9 +11,6 @@ export default function DetailCriteriaScale() {
 
   const { options: criteriaOptions } = useCriteriasOptions();
 
-
-  console.log(criteriaOptions);
-
   return (
     <div>
       <AutoCompleteInput
@@ -23,8 +20,18 @@ export default function DetailCriteriaScale() {
         isRequired={!isEdit}
         isDisabled={isEdit}
       />
-      <NumberInput fieldName="scaleValue" fieldLabel="Nilai Skala" isRequired />
       <TextInput fieldName="category" fieldLabel="Kategori" isRequired />
+      <NumberInput
+        fieldName="scaleValue"
+        fieldLabel="Nilai Skala"
+        isRequired
+        additionalRules={{
+          min: {
+            value: 1,
+            message: "Nilai Skala harus lebih besar atau sama dengan 1",
+          },
+        }}
+      />
       <TextAreaInput fieldName="description" fieldLabel="Deskripsi" />
     </div>
   );

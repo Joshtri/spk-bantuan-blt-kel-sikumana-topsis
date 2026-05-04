@@ -56,13 +56,26 @@ function extractFieldErrors(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiErrorResponse>) => {
+    const status = error.response?.status;
+
+    // Auto-logout on any 401 outside the login endpoint
+    if (status === 401) {
+      const url = error.config?.url ?? "";
+      if (!url.includes("/auth/login")) {
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("identity_cache");
+        delete axiosInstance.defaults.headers.common["Authorization"];
+        window.location.href = "/login";
+      }
+    }
+
     const data = error.response?.data;
     const fieldErrors = extractFieldErrors(data);
 
     const httpError: HttpError = {
       message:
         data?.error ?? data?.message ?? error.message ?? "An error occurred",
-      statusCode: error.response?.status ?? 0,
+      statusCode: status ?? 0,
       ...(fieldErrors ? { errors: fieldErrors } : {}),
     };
 

@@ -1,11 +1,6 @@
 import { ColumnTable } from "@/components/table/types";
-
-interface ICriteria {
-  id: number;
-  name: string;
-  weight: number;
-  type: "benefit" | "cost";
-}
+import { Chip } from "@heroui/react";
+import { ICriteria } from "./interfaces";
 
 export const criteriaColumns: ColumnTable<ICriteria>[] = [
   {
@@ -17,8 +12,25 @@ export const criteriaColumns: ColumnTable<ICriteria>[] = [
     title: "Bobot",
   },
   {
-    key: "type",
+    key: "criteriaType",
     title: "Tipe",
-    render: (item) => (item.type === "benefit" ? "Benefit" : "Cost"),
+    render: (item) => {
+      return (
+        <Chip
+          color={item.criteriaType === "Cost" ? "danger" : "success"}
+          size="sm"
+          variant="primary"
+        >
+          {item.criteriaType}
+        </Chip>
+      );
+    },
   },
+  {
+    key: "totalScale",
+    title: "Total Skala",
+    render(item) {
+      return item.totalScale ?? 0;
+    },
+  }
 ];

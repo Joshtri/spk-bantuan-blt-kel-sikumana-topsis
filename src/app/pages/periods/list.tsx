@@ -5,6 +5,7 @@ import { periodColumns } from "@/features/periods/columns";
 export default function PeriodListPage() {
   return (
     <DataTable
+      label="Periode"
       resource={"periods"}
       actionColumns={[
         ActionButton.Create,
